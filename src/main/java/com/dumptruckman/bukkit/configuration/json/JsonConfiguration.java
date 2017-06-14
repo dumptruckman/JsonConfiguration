@@ -53,7 +53,7 @@ public class JsonConfiguration extends FileConfiguration {
      *
      * Specifically it does the following:
      *   for Map: calls this method recursively on the Map before putting it in the returned Map.
-     *   for List: calls {@link #buildList(java.util.List)} which functions similar to this method.
+     *   for List: calls {@link #buildList(java.util.Collection)} which functions similar to this method.
      *   for ConfigurationSection: gets the values as a map and calls this method recursively on the Map before putting
      *       it in the returned Map.
      *   for ConfigurationSerializable: add the {@link ConfigurationSerialization#SERIALIZED_TYPE_KEY} to a new Map
@@ -93,8 +93,8 @@ public class JsonConfiguration extends FileConfiguration {
     }
 
     /**
-     * Takes a List and parses through the values, to ensure that, before saving, all objects are as appropriate as
-     * possible for storage in json format.
+     * Takes a Collection and parses through the values, to ensure that, before saving, all objects are as appropriate
+     * as possible for storage in json format.
      *
      * Specifically it does the following:
      *   for Map: calls {@link #buildMap(java.util.Map)} on the Map before adding to the returned list.
@@ -106,10 +106,10 @@ public class JsonConfiguration extends FileConfiguration {
      *       and calls {@link #buildMap(java.util.Map)} on the new Map before adding to the returned list.
      *   for Everything else: stores it as is in the returned List.
      */
-    private List<Object> buildList(@NotNull final List<?> list) {
-        final List<Object> result = new ArrayList<Object>(list.size());
+    private List<Object> buildList(@NotNull final Collection<?> collection) {
+        final List<Object> result = new ArrayList<Object>(collection.size());
         try {
-            for (Object o : list) {
+            for (Object o : collection) {
                 if (o instanceof Object[]) {
                     o = new ArrayList<Object>(Arrays.asList((Object[]) o));
                 }
