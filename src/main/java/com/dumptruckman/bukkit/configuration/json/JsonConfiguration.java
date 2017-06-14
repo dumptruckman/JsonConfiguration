@@ -57,9 +57,9 @@ public class JsonConfiguration extends FileConfiguration {
         try {
             input = (Map<?, ?>) new JSONParser(JSONParser.USE_INTEGER_STORAGE).parse(contents);
         } catch (ParseException e) {
-            throw new InvalidConfigurationException("Invalid JSON detected.");
+            throw new InvalidConfigurationException("Invalid JSON detected.", e);
         } catch (ClassCastException e) {
-            throw new InvalidConfigurationException("Top level is not a Map.");
+            throw new InvalidConfigurationException("Top level is not a Map.", e);
         }
 
         if (input != null) {
