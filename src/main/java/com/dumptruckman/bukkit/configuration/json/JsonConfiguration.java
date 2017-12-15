@@ -5,6 +5,7 @@ package com.dumptruckman.bukkit.configuration.json;
 
 import com.dumptruckman.bukkit.configuration.SerializableSet;
 import com.dumptruckman.bukkit.configuration.util.SerializationHelper;
+import com.google.common.base.Charsets;
 import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -106,22 +107,13 @@ public class JsonConfiguration extends FileConfiguration {
 
     private static JsonConfiguration loadConfiguration(@NotNull final JsonConfiguration config, @NotNull final File file) {
         try {
-            config.load(new FileReader(file));
+            config.load(file);
         } catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, "Cannot find file " + file, ex);
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Cannot load " + file, ex);
         } catch (InvalidConfigurationException ex) {
             LOG.log(Level.SEVERE, "Cannot load " + file , ex);
-        }
-        return config;
-    }
-
-    private static JsonConfiguration loadConfiguration(@NotNull final JsonConfiguration config, @NotNull final String json) {
-        try {
-            config.loadFromString(json);
-        } catch (InvalidConfigurationException ex) {
-            LOG.log(Level.SEVERE, "Cannot parse " + json , ex);
         }
         return config;
     }
@@ -136,40 +128,7 @@ public class JsonConfiguration extends FileConfiguration {
      * @return The configuration loaded from the file contents.
      */
     public static JsonConfiguration loadConfiguration(@NotNull final File file) {
-        try {
-            return loadConfiguration(file, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return loadConfiguration(new JsonConfiguration(), file);
-        }
-    }
-
-    /**
-     * Loads up a configuration from a json formatted file with the specified file encoding.
-     *
-     * If the file does not exist, it will be created.
-     *
-     * @param file The file to load the configuration from.
-     * @param charset The file encoding to use.
-     * @return The configuration loaded from the file contents.
-     * @throws UnsupportedEncodingException if the file encoding is not supported on this system.
-     * @throws IllegalCharsetNameException if the charset name is not a valid charset.
-     */
-    public static JsonConfiguration loadConfiguration(@NotNull final File file, @NotNull final String charset) throws UnsupportedEncodingException, IllegalCharsetNameException {
-        return loadConfiguration(new EncodedJsonConfiguration(charset), file);
-    }
-
-    /**
-     * Loads up a configuration from a json formatted file with the specified file encoding.
-     *
-     * If the file does not exist, it will be created.
-     *
-     * @param file The file to load the configuration from.
-     * @param charset The file encoding to use.
-     * @return The configuration loaded from the file contents.
-     * @throws UnsupportedEncodingException if the file encoding is not supported on this system.
-     */
-    public static JsonConfiguration loadConfiguration(@NotNull final File file, @NotNull final Charset charset) throws UnsupportedEncodingException {
-        return loadConfiguration(new EncodedJsonConfiguration(charset), file);
+        return loadConfiguration(new JsonConfiguration(), file);
     }
 
     public JsonConfiguration() {
