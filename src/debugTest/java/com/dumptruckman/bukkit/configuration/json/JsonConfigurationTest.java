@@ -6,6 +6,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemFactory;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +52,15 @@ public class JsonConfigurationTest {
         System.out.println(jc.getValues(true));
         JsonConfiguration jsonConfiguration = JsonConfiguration.loadConfiguration(new File("./testdata/valid1.json"));
         System.out.println(jsonConfiguration.getValues(true));
+    }
+
+    @Test
+    public void testIntegerStorage() throws Exception {
+        jc.set("int", 3);
+        String output = jc.saveToString();
+        System.out.println(output);
+        jc.loadFromString(output);
+        Assert.assertEquals("3", jc.get("int").toString());
     }
 
     @Test(expected=InvalidConfigurationException.class)

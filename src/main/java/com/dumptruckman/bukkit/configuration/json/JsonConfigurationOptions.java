@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JsonConfigurationOptions extends FileConfigurationOptions {
 
+    private boolean enablePrettyPrint = true;
+
     protected JsonConfigurationOptions(@NotNull final JsonConfiguration configuration) {
         super(configuration);
     }
@@ -42,5 +44,25 @@ public class JsonConfigurationOptions extends FileConfigurationOptions {
     public JsonConfigurationOptions copyHeader(final boolean value) {
         super.copyHeader(value);
         return this;
+    }
+
+    /**
+     * Sets whether or not to pretty print the json output of the configuration.
+     *
+     * @param enable Whether or not pretty printing should be enabled.
+     * @return This object, for chaining.
+     */
+    public JsonConfigurationOptions prettyPrint(final boolean enable) {
+        enablePrettyPrint = enable;
+        return this;
+    }
+
+    /**
+     * Gets whether or not to pretty print the json output of the configuration.
+     *
+     * @return Whether or not to pretty print the json.
+     */
+    public boolean prettyPrint() {
+        return enablePrettyPrint;
     }
 }
