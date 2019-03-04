@@ -22,5 +22,11 @@ Maven Dependency Info
         <artifactId>JsonConfiguration</artifactId>
         <version>1.1</version>
     </dependency>
+    <!-- Required json dependency because no other json lib can handle numbers appropriately. -->
+    <dependency>
+        <groupId>net.minidev</groupId>
+        <artifactId>json-smart</artifactId>
+        <version>1.1.1</version>
+    </dependency>
 </dependencies>
 ```
