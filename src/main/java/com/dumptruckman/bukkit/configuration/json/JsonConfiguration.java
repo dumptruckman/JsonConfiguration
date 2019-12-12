@@ -5,7 +5,6 @@ package com.dumptruckman.bukkit.configuration.json;
 
 import com.dumptruckman.bukkit.configuration.SerializableSet;
 import com.dumptruckman.bukkit.configuration.util.SerializationHelper;
-import com.google.common.base.Charsets;
 import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -17,12 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.util.*;
+import java.io.Reader;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -118,6 +114,19 @@ public class JsonConfiguration extends FileConfiguration {
         return config;
     }
 
+    private static JsonConfiguration loadConfiguration(@NotNull final JsonConfiguration config, @NotNull final Reader reader) {
+        try {
+            config.load(reader);
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, "Cannot find file " + reader, ex);
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, "Cannot load " + reader, ex);
+        } catch (InvalidConfigurationException ex) {
+            LOG.log(Level.SEVERE, "Cannot load " + reader , ex);
+        }
+        return config;
+    }
+
     /**
      * Loads up a configuration from a json formatted file.
      *
@@ -129,6 +138,19 @@ public class JsonConfiguration extends FileConfiguration {
      */
     public static JsonConfiguration loadConfiguration(@NotNull final File file) {
         return loadConfiguration(new JsonConfiguration(), file);
+    }
+
+    /**
+     * Loads up a configuration from a json formatted file.
+     *
+     * If the reader does not exist, it will be created.  This will attempt to use UTF-8 encoding for the file, if it fails
+     * to do so, the system default will be used instead.
+     *
+     * @param reader The reader to load the configuration from.
+     * @return The configuration loaded from the file contents.
+     */
+    public static JsonConfiguration loadConfiguration(@NotNull final Reader reader) {
+        return loadConfiguration(new JsonConfiguration(), reader);
     }
 
     public JsonConfiguration() {
