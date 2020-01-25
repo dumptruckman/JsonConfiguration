@@ -1,19 +1,13 @@
 package com.dumptruckman.bukkit.configuration.util;
 
 import com.dumptruckman.bukkit.configuration.SerializableSet;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import com.dumptruckman.bukkit.configuration.YAMLException;
 import org.jetbrains.annotations.NotNull;
-import org.yaml.snakeyaml.error.YAMLException;
+import org.simpleyaml.configuration.ConfigurationSection;
+import org.simpleyaml.configuration.serialization.ConfigurationSerializable;
+import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,7 +53,7 @@ public class SerializationHelper {
      *   for ConfigurationSection: gets the values as a map and calls this method recursively on the Map before putting
      *       it in the returned Map.
      *   for ConfigurationSerializable: add the {@link ConfigurationSerialization#SERIALIZED_TYPE_KEY} to a new Map
-     *       along with the Map given by {@link org.bukkit.configuration.serialization.ConfigurationSerializable#serialize()}
+     *       along with the Map given by {@link ConfigurationSerializable#serialize()}
      *       and calls this method recursively on the new Map before putting it in the returned Map.
      *   for Everything else: stores it as is in the returned Map.
      */
@@ -86,7 +80,7 @@ public class SerializationHelper {
      *   for ConfigurationSection: gets the values as a map and calls {@link #buildMap(java.util.Map)} on the Map
      *       before adding to the returned list.
      *   for ConfigurationSerializable: add the {@link ConfigurationSerialization#SERIALIZED_TYPE_KEY} to a new Map
-     *       along with the Map given by {@link org.bukkit.configuration.serialization.ConfigurationSerializable#serialize()}
+     *       along with the Map given by {@link ConfigurationSerializable#serialize()}
      *       and calls {@link #buildMap(java.util.Map)} on the new Map before adding to the returned list.
      *   for Everything else: stores it as is in the returned List.
      */

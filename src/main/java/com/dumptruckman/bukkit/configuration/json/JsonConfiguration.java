@@ -5,24 +5,21 @@ package com.dumptruckman.bukkit.configuration.json;
 
 import com.dumptruckman.bukkit.configuration.SerializableSet;
 import com.dumptruckman.bukkit.configuration.util.SerializationHelper;
-import com.google.common.base.Charsets;
-import net.minidev.json.JSONValue;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.simpleyaml.configuration.ConfigurationSection;
+import org.simpleyaml.configuration.file.FileConfiguration;
+import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.util.*;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,13 +34,23 @@ public class JsonConfiguration extends FileConfiguration {
 
     private static final Logger LOG = Logger.getLogger(JsonConfiguration.class.getName());
 
+    public JsonConfiguration() {
+        ConfigurationSerialization.registerClass(SerializableSet.class);
+    }
+
     @NotNull
     @Override
     public String saveToString() {
-        String dump = JSONValue.toJSONString(SerializationHelper.serialize(getValues(false)));
+        final GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping();
+
+        gsonBuilder.setPrettyPrinting();
+
+        final Gson gson = gsonBuilder.create();
+        final Object value = SerializationHelper.serialize(getValues(false));
+        final String dump = StringEscapeUtils.unescapeJava(gson.toJson(value));
 
         if (dump.equals(BLANK_CONFIG)) {
-            dump = "";
+            return "";
         }
 
         return dump;
@@ -55,10 +62,17 @@ public class JsonConfiguration extends FileConfiguration {
             return;
         }
 
-        Map<?, ?> input;
+        final Map<?, ?> input;
+
         try {
-            input = (Map<?, ?>) new JSONParser(JSONParser.USE_INTEGER_STORAGE).parse(contents);
-        } catch (ParseException e) {
+            final Gson gson =
+                new GsonBuilder()
+                    .registerTypeAdapter(
+                        new TypeToken<Map<String, Object>>() {}.getType(),
+                        new MapDeserializerDoubleAsIntFix())
+                    .create();
+            input = gson.fromJson(contents, new TypeToken<Map<String, Object>>() {}.getType());
+        } catch (JsonSyntaxException e) {
             throw new InvalidConfigurationException("Invalid JSON detected.", e);
         } catch (ClassCastException e) {
             throw new InvalidConfigurationException("Top level is not a Map.", e);
@@ -67,7 +81,8 @@ public class JsonConfiguration extends FileConfiguration {
         if (input != null) {
             convertMapsToSections(input, this);
         } else {
-            throw new InvalidConfigurationException("An unknown error occurred while attempting to parse the json.");
+            throw new InvalidConfigurationException(
+                "An unknown error occurred while attempting to parse the json.");
         }
     }
 
@@ -110,10 +125,8 @@ public class JsonConfiguration extends FileConfiguration {
             config.load(file);
         } catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, "Cannot find file " + file, ex);
-        } catch (IOException ex) {
+        } catch (IOException | InvalidConfigurationException ex) {
             LOG.log(Level.SEVERE, "Cannot load " + file, ex);
-        } catch (InvalidConfigurationException ex) {
-            LOG.log(Level.SEVERE, "Cannot load " + file , ex);
         }
         return config;
     }
@@ -131,7 +144,4 @@ public class JsonConfiguration extends FileConfiguration {
         return loadConfiguration(new JsonConfiguration(), file);
     }
 
-    public JsonConfiguration() {
-        ConfigurationSerialization.registerClass(SerializableSet.class);
-    }
 }

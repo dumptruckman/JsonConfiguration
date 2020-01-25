@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package com.dumptruckman.bukkit.configuration.json;
 
-import org.bukkit.configuration.file.FileConfigurationOptions;
 import org.jetbrains.annotations.NotNull;
+import org.simpleyaml.configuration.file.FileConfigurationOptions;
 
 /**
  * Mandatory configuration options class for JsonConfiguration.
