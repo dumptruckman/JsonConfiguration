@@ -3,17 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package com.dumptruckman.bukkit.configuration.json;
 
-import com.dumptruckman.bukkit.configuration.SerializableSet;
+import com.dumptruckman.bukkit.configuration.util.JsonHelper;
 import com.dumptruckman.bukkit.configuration.util.SerializationHelper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.text.StringEscapeUtils;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 import org.jetbrains.annotations.NotNull;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.file.FileConfiguration;
-import org.simpleyaml.configuration.serialization.ConfigurationSerialization;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.File;
@@ -34,20 +31,11 @@ public class JsonConfiguration extends FileConfiguration {
 
     private static final Logger LOG = Logger.getLogger(JsonConfiguration.class.getName());
 
-    public JsonConfiguration() {
-        ConfigurationSerialization.registerClass(SerializableSet.class);
-    }
-
     @NotNull
     @Override
     public String saveToString() {
-        final GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping();
-
-        gsonBuilder.setPrettyPrinting();
-
-        final Gson gson = gsonBuilder.create();
-        final Object value = SerializationHelper.serialize(getValues(false));
-        final String dump = StringEscapeUtils.unescapeJava(gson.toJson(value));
+        final JsonObject jsonObject = JsonHelper.mapAsJsonObject(getValues(false));
+        final String dump = jsonObject.toString(WriterConfig.PRETTY_PRINT);
 
         if (dump.equals(BLANK_CONFIG)) {
             return "";
@@ -57,37 +45,22 @@ public class JsonConfiguration extends FileConfiguration {
     }
 
     @Override
-    public void loadFromString(@NotNull final String contents) throws InvalidConfigurationException {
+    public void loadFromString(@NotNull final String contents) {
         if (contents.isEmpty()) {
             return;
         }
 
-        final Map<?, ?> input;
-
-        try {
-            final Gson gson =
-                new GsonBuilder()
-                    .registerTypeAdapter(
-                        new TypeToken<Map<String, Object>>() {}.getType(),
-                        new MapDeserializerDoubleAsIntFix())
-                    .create();
-            input = gson.fromJson(contents, new TypeToken<Map<String, Object>>() {}.getType());
-        } catch (JsonSyntaxException e) {
-            throw new InvalidConfigurationException("Invalid JSON detected.", e);
-        } catch (ClassCastException e) {
-            throw new InvalidConfigurationException("Top level is not a Map.", e);
-        }
-
-        if (input != null) {
-            convertMapsToSections(input, this);
-        } else {
-            throw new InvalidConfigurationException(
-                "An unknown error occurred while attempting to parse the json.");
-        }
+        convertMapsToSections(
+            JsonHelper.jsonObjectAsMap(
+                Json.parse(contents)
+            ),
+            this
+        );
     }
 
     private void convertMapsToSections(@NotNull Map<?, ?> input, @NotNull final ConfigurationSection section) {
         final Object result = SerializationHelper.deserialize(input);
+
         if (result instanceof Map) {
             input = (Map<?, ?>) result;
             for (Map.Entry<?, ?> entry : input.entrySet()) {
@@ -107,7 +80,6 @@ public class JsonConfiguration extends FileConfiguration {
 
     @Override
     protected String buildHeader() {
-        // json does not support comments of any kind.
         return "";
     }
 

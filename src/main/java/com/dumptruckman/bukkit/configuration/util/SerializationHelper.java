@@ -59,7 +59,7 @@ public class SerializationHelper {
      */
     @NotNull
     private static Map<String, Object> buildMap(@NotNull final Map<?, ?> map) {
-        final Map<String, Object> result = new LinkedHashMap<String, Object>(map.size());
+        final Map<String, Object> result = new LinkedHashMap<>(map.size());
         try {
             for (final Map.Entry<?, ?> entry : map.entrySet()) {
                 result.put(entry.getKey().toString(), serialize(entry.getValue()));
