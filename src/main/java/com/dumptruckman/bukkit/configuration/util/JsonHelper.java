@@ -35,17 +35,6 @@ public final class JsonHelper {
 	}
 
 	@NotNull
-	public static Set<Object> jsonArrayAsSet(@NotNull JsonArray array) {
-		final Set<Object> set = new HashSet<>();
-
-		for(JsonValue value:array) {
-			set.add(jsonValueAsObject(value));
-		}
-
-		return set;
-	}
-
-	@NotNull
 	public static List<Object> jsonArrayAsList(@NotNull JsonArray array) {
 		final List<Object> list = new ArrayList<>(array.size());
 
