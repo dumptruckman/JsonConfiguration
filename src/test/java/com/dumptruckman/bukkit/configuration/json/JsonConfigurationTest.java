@@ -1,6 +1,5 @@
 package com.dumptruckman.bukkit.configuration.json;
 
-import com.dumptruckman.bukkit.configuration.json.JsonConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
