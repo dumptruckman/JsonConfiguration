@@ -56,9 +56,9 @@
             <version>0.9.5</version>
         </dependency>
         <dependency>
-            <groupId>me.carleslc</groupId>
+            <groupId>com.github.Carleslc</groupId>
             <artifactId>Simple-YAML</artifactId>
-            <version>1.4.2</version>
+            <version>-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
