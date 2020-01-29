@@ -9,4 +9,4 @@ public class SerializableSetTest {
     public void setUp() throws Exception {
     }
 
-} 
+}

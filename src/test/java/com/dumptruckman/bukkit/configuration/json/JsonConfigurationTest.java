@@ -1,4 +1,4 @@
-package com.dumptruckman.bukkit.configuration;
+package com.dumptruckman.bukkit.configuration.json;
 
 import com.dumptruckman.bukkit.configuration.json.JsonConfiguration;
 import org.bukkit.Bukkit;
@@ -58,4 +58,4 @@ public class JsonConfigurationTest {
     public void testInvalidJson() throws Exception {
         jc.loadFromString(invalidJson1);
     }
-} 
+}
