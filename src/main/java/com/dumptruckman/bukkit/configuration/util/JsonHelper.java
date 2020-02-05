@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.jetbrains.annotations.NotNull;
+import org.simpleyaml.configuration.ConfigurationSection;
 
 import java.util.*;
 
@@ -55,7 +56,9 @@ public final class JsonHelper {
 		final Map<String,Object> map = new HashMap<>(jsonObject.size(), 1.f);
 
 		jsonObject.forEach(member ->
-			map.put(member.getName(), jsonValueAsObject(member.getValue()))
+			jsonValueAsObject(member.getValue()).ifPresent(o ->
+				map.put(member.getName(), o)
+			)
 		);
 
 		return map;
@@ -81,6 +84,8 @@ public final class JsonHelper {
 			value = collectionAsJsonArray((Collection<?>)object);
 		} else if (object instanceof Map) {
 			value = mapAsJsonObject((Map<?,?>)object);
+		} else if (object instanceof ConfigurationSection) {
+			value = mapAsJsonObject(((ConfigurationSection) object).getValues(false));
 		} else {
 			value = null;
 		}
