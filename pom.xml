@@ -25,7 +25,7 @@
         </repository>
         <repository>
             <id>onarandombox</id>
-            <url>http://repo.onarandombox.com/content/groups/public/</url>
+            <url>https://repo.onarandombox.com/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
-            <version>1.1.1</version>
+            <version>2.4.7</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -99,7 +99,7 @@
                 <dependency>
                     <groupId>org.spigotmc</groupId>
                     <artifactId>spigot</artifactId>
-                    <version>1.12-R0.1-SNAPSHOT</version>
+                    <version>1.12.2-R0.1-SNAPSHOT</version>
                     <type>jar</type>
                     <scope>test</scope>
                 </dependency>
@@ -187,9 +187,6 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <links>
-                                <link>http://jd.bukkit.org/apidocs/</link>
-                            </links>
                             <linksource>true</linksource>
                             <!--dependencySourceExcludes>
                                 <dependencySourceExclude>com.intellij:*</dependencySourceExclude>
