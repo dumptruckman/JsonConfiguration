@@ -20,13 +20,13 @@ Maven Dependency Info
     <dependency>
         <groupId>com.dumptruckman.minecraft</groupId>
         <artifactId>JsonConfiguration</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </dependency>
     <!-- Required json dependency because no other json lib can handle numbers appropriately. -->
     <dependency>
         <groupId>net.minidev</groupId>
         <artifactId>json-smart</artifactId>
-        <version>1.1.1</version>
+        <version>2.4.7</version>
     </dependency>
 </dependencies>
 ```
